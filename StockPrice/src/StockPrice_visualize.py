@@ -20,9 +20,9 @@ class StockData:
         
         start, end = self.check_period(start, end, period)
 
-        self.open_days = StockData.count_open_day(start, end, period)
+        self.open_days = self.count_open_day(start, end, period)
 
-        self.start_ts, self.end_ts = check_open(start, end)
+        self.start_ts, self.end_ts = StockData.check_open(start, end)
 
         expire_after = dt.timedelta(days=3)
         session = requests_cache.CachedSession(cache_name='cache', expire_after=expire_after)
@@ -74,17 +74,17 @@ class StockData:
 
         return start, end
 
-    def check_open(self, start, end):
+    def check_open(start, end):
         start_ts = StockData.last_open_day(start)
         end_ts = StockData.next_open_day(end)
 
         ### add message when start, end are not market open date
         if start_ts != start:
             print("The market is not open on the start date, automatically shifted to the last open date which is %s" 
-                            %(self.start_ts.strftime("%Y-%m-%d")))
+                            %(start_ts.strftime("%Y-%m-%d")))
         if end_ts != end:
             print("The market is not open on the end date, automatically shifted to the next open date which is %s" 
-                            %(self.end_ts.strftime("%Y-%m-%d")))
+                            %(end_ts.strftime("%Y-%m-%d")))
 
         return start_ts, end_ts
     
@@ -116,7 +116,7 @@ class StockData:
     '''
     return the count of open days in date_range
     '''
-    def count_open_day(start , end , period = None):
+    def count_open_day(self, start , end , period = None):
         ### add test for three parameters, al least two should be not emply. If all parameters are given
         ### they should match
         start_ts, end_ts = self.check_period(start, end, period)
@@ -126,7 +126,7 @@ class StockData:
         
     
     '''
-    compute the inflation, return a string of percentage
+    compute the fluctuation, return a string of percentage
     '''
     def diff(a,b):
         result = round((b-a)/a, 4)
@@ -135,36 +135,36 @@ class StockData:
     
     
     '''
-    get the inflation from start to end
+    get the fluctuation from start to end
     '''
-    def total_inflation(self, stock = [], start = "", end = "", period = None, method = "close-open"):
+    def total_fluctuation(self, stock = [], start = "", end = "", period = None, method = "close-open"):
         if not stock:
             stock = list(self.df.keys())
         
         start_ts, end_ts = self.check_period(start, end, period)
-        start_ts, end_ts = self,check_open(start_ts, end_ts)
+        start_ts, end_ts = StockData.check_open(start_ts, end_ts)
 
-        inflation = dict()
+        fluctuation = dict()
         if method == "close-open":
             for name in stock:
-                inflation[name] = StockData.diff(self.df[name].loc[start_ts]["Close"], self.df[name].loc[end_ts]["Open"])[1]
+                fluctuation[name] = StockData.diff(self.df[name].loc[start_ts]["Close"], self.df[name].loc[end_ts]["Open"])[1]
         else:
             for name in stock:
-                inflation[name] = StockData.diff(self.df[name].loc[start_ts]["High"], self.df[name].loc[end_ts]["Low"])[1]
+                fluctuation[name] = StockData.diff(self.df[name].loc[start_ts]["High"], self.df[name].loc[end_ts]["Low"])[1]
         
-        return pd.DataFrame(data = inflation, index = ["inflation"])
+        return pd.DataFrame(data = fluctuation, index = ["fluctuaion"])
     
     
     
     '''
-    get the inflation for every day
+    get the fluctuation for every day
     '''
-    def inflation(self, stock = [], start = "", end = "", period = None, method = "close-open", in_function = False):
+    def fluctuation(self, stock = [], start = "", end = "", period = None, method = "close-open", in_function = False):
         if not stock:
             stock = list(self.df.keys())
         
         start_ts, end_ts = self.check_period(start, end, period)
-        start_ts, end_ts = self,check_open(start_ts, end_ts)
+        start_ts, end_ts = StockData.check_open(start_ts, end_ts)
 
         date_range = pd.date_range(start_ts, end_ts)
         
@@ -187,22 +187,44 @@ class StockData:
     
     
     '''
-    plot the daily inflation
+    plot the daily fluctuation
     '''
-    def inflation_plot(self, stock = [], start = "", end = "", period = None, method = "close-open"):
-        df_inflation = self.inflation(stock, start, end, period, method, in_function = True)
+    def fluctuation_plot(self, stock = [], start = "", end = "", period = None, method = "close-open"):
+        df_fluctuation = self.fluctuation(stock, start, end, period, method, in_function = True)
         #sns.set()
         fig, axes = plt.subplots(nrows=1, ncols=2)
         fig.set_figheight(10)
         fig.set_figwidth(15)
 
-        df_inflation.boxplot(ax = axes[0])
-        axes[0].set_title("Box Plot for Inflation")
+        df_fluctuation.boxplot(ax = axes[0])
+        axes[0].set_title("Box Plot for Fluctuation")
 
-        df_inflation.plot(ax = axes[1])
-        axes[1].set_title("Plot for the Inflation")
+        df_fluctuation.plot(ax = axes[1])
+        axes[1].set_title("Plot for the Fluctuation")
         
         plt.show()
+
+
+    def get_button(self, start_ts, end_ts):
+
+        days = (end_ts - start_ts).days
+        buttons = []
+        if days >= 30:
+            buttons.append(dict(count=1, label="1m", step="month", stepmode="backward"))
+        if days >= 90:
+            buttons.append(dict(count=3, label="3m", step="month", stepmode="backward"))
+        if days >= 180:
+            buttons.append(dict(count=6, label="6m", step="month", stepmode="backward"))
+        if days >=365:
+            buttons.append(dict(count=1, label="1y", step="year", stepmode="backward"))
+        if days >= 365*3:
+            buttons.append(dict(count=3, label="3y", step="year", stepmode="backward"))
+        if days >= 365*5:
+            buttons.append(dict(count=5, label="5y", step="year", stepmode="backward"))
+        buttons.append(dict(step="all"))
+
+        return buttons
+
         
          
 
@@ -223,7 +245,7 @@ class StockData:
         ### add error message when input value not correct
         
         start_ts, end_ts = self.check_period(start, end, period)
-        start_ts, end_ts = self,check_open(start_ts, end_ts)
+        start_ts, end_ts = StockData.check_open(start_ts, end_ts)
 
         c = self.df[stock[0]][method]
         c.columns = [s+"-"+stock[0] for s in c.columns]
@@ -237,18 +259,14 @@ class StockData:
         temp = ", ".join(stock)
         fig = px.line(c1,x="Date",y=list(c1.columns)[1:],title='Stock Price of ' + temp,render_mode='webg1')
         
+        
         fig.update_xaxes(
             rangeslider_visible=True,
             rangeselector=dict(
-                buttons=list([
-                    dict(count=1, label="1m", step="month", stepmode="backward"),
-                    dict(count=6, label="6m", step="month", stepmode="backward"),
-                    dict(count=1, label="1y", step="year", stepmode="backward"),
-                    dict(step="all")
-                ])
+                buttons = self.get_button(start_ts, end_ts)
             )
         )
-        
+
         fig.update_layout(yaxis_title="Price (USD)",
                   width=900,
                   height=600)
@@ -272,7 +290,7 @@ class StockData:
             stock = list(self.df.keys())
 
         start_ts, end_ts = self.check_period(start, end, period)
-        start_ts, end_ts = self,check_open(start_ts, end_ts)
+        start_ts, end_ts = StockData.check_open(start_ts, end_ts)
 
         
         for s in stock:
@@ -297,14 +315,9 @@ class StockData:
                 secondary_y=True
             )
             fig.update_xaxes(
-                rangeslider_visible=True,
-                rangeselector=dict(
-                    buttons=list([
-                        dict(count=1, label="1m", step="month", stepmode="backward"),
-                        dict(count=6, label="6m", step="month", stepmode="backward"),
-                        dict(count=1, label="1y", step="year", stepmode="backward"),
-                        dict(step="all")
-                    ])
+                rangeslider_visible = True,
+                rangeselector = dict(
+                    buttons = self.get_button(start_ts, end_ts)
                 ))
             # volume
             fig.add_trace(
