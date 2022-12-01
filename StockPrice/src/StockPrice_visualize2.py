@@ -184,10 +184,38 @@ class StockData:
         df_inflation.plot()
         plt.legend()
         plt.title("Plot for the Inflation")
-        plt.show()
-        
+        plt.show()      
          
 
+    def box_plot(self, stock = [], start = "", end = "", method = "close-open"):
+        '''
+        Show a box plot of inflation, on which you can do some customization.
+        :param stock: a sublist of self.stock, default value is self.stock
+        :param start: a string of selected start date, should be in the range of (self.start, self.end).
+                      Default value is self.start
+        :param end: a string of of selected end date, should be in the range of (self.start, self.end), 
+                    and later than the "start" param. Default value is self.end
+        :param method: a string which can be "close-open" or "high-low", default value is "close-open".
+        '''
+        df_inflation = self.inflation(stock, start, end, method, in_function = True)
+        
+        if not stock:
+            stock = list(self.df.keys())
+        temp = ", ".join(stock)
+        
+        fig = go.Figure()
+        for s in stock:
+            fig.add_trace(go.Box(y=df_inflation[s],name=s))        
+        
+        fig.update_layout(title = 'Box Plot for Inflation of ' + temp,
+                          yaxis_title="Price (USD)",
+                          width=900,
+                          height=800)
+        
+        fig.show()
+    
+    
+    
     def candle_plot(self, stock = [], start = "", end = ""):
         '''
         Show a candlestick plot of stock price, on which you can do some customization.
