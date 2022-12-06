@@ -1,12 +1,6 @@
-from src.StockPrice_visualize import StockData
-from src.StockPrice_ML import StockPrediction
-data = StockData(["Meta"], "2017-01-01", "2022-10-30")
-data.price_plot(method = ["Open", "High"])
+from src.stock_price_visualize import StockData
+from src.stock_price_ml import StockPrediction
+data = StockData(["Meta"], "2022-10-20", "2022-10-30")
+model = StockPrediction(data)
 
-'''
-model = StockPrediction(data = data)
-
-
-pred, interval = model.predict(days = 5)
-print(pred.index)
-'''
+print(model.date)
