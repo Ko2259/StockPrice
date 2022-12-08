@@ -21,8 +21,7 @@ class StockData:
                    the stock price data
         start_ts, end_ts (pd.Timestamp): the start and end date
         open_days (int): number of market open days between start and end date
-
-
+        
     """
     def __init__(self, stocks = ["^DJI"], start = "", end = "", period = None):
         """
