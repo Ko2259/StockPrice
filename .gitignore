@@ -1,6 +1,9 @@
 .DS_Store
 **/.DS_Store
 
+cache.sqlite
+**/cache.sqlite
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 **/__pychache__/
