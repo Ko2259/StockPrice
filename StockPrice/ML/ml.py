@@ -9,7 +9,7 @@ import requests_cache
 from pandas_datareader.yahoo.headers import DEFAULT_HEADERS
 from sktime.forecasting.tbats import TBATS
 
-from StockPrice import StockData
+from stockprice import StockData
 
 class StockPrediction:
     """

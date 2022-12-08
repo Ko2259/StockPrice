@@ -3,7 +3,7 @@ sys.path.append('../')
 
 import pandas as pd
 
-from StockPrice import StockData, StockPrediction, StockEvaluation
+from stockprice import StockData, StockPrediction, StockEvaluation
 '''
 data = StockData(["Meta", "AMZN"], "2022-10-20", "2022-11-28")
 model = StockPrediction(data)

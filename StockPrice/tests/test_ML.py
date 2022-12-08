@@ -9,8 +9,8 @@ from datetime import datetime
 from pandas_datareader._testing import skip_on_exception
 from pandas_datareader._utils import RemoteDataError
 
-from Visualization import StockData
-from ML import StockPrediction
+from visualization import StockData
+from ml import StockPrediction
 
 class TestVisual(unittest.TestCase):
 

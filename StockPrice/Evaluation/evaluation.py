@@ -7,7 +7,7 @@ from pandas_datareader.data import DataReader
 import requests_cache
 from pandas_datareader.yahoo.headers import DEFAULT_HEADERS
 
-from StockPrice import StockData
+from stockprice import StockData
 
 class StockEvaluation:
     """

@@ -6,7 +6,7 @@ from datetime import datetime
 from pandas_datareader._testing import skip_on_exception
 from pandas_datareader._utils import RemoteDataError
 
-from Visualization import StockData
+from visualization import StockData
 
 class TestVisual(unittest.TestCase):
 

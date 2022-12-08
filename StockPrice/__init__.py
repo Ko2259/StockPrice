@@ -1,5 +1,5 @@
-from .Visualization import StockData
-from .ML import StockPrediction
-from .Evaluation import StockEvaluation
+from .visualization import StockData
+from .ml import StockPrediction
+from .evaluation import StockEvaluation
 
 #__all__ = ["Visualization", "StockData", "StockPrediction"]
