@@ -1,0 +1,7 @@
+[Format]
+good-names=m,n,i,j,k,x,y,z,a,b,c,s,df,fh
+max-args = 10
+disable = no-self-argument
+
+[MASTER]
+init-hook='import sys; sys.path.append("../")
