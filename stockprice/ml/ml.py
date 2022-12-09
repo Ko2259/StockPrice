@@ -34,7 +34,7 @@ class StockPrediction:
 
         parameters:
         data (StockData): the stock data that we will build our model.
-        val: (str): The value we will use for the prediction. Default is "Close".
+        val (str): The value we will use for the prediction. Default is "Close".
         method (str): ML model we will use. Default is TBATS.
         stocks, start, end, period : If data is not given, we will use these to build a
                                      a StockData class
@@ -137,7 +137,7 @@ class StockPrediction:
         update the train set until the given date.
 
         parameters:
-            date (Timestamp): will update the train set until the given date.
+            date (str): will update the train set until the given date.
             message (bool): whether we will need to print the message. When update inside of
                             of other functions, message = False.
         """
