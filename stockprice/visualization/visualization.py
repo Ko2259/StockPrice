@@ -244,10 +244,14 @@ class StockData:
         fluctuation = {}
         if method == "close-open":
             for name in stock:
+                if start_ts < self.df[name].index[0]:
+                    start_ts = self.df[name].index[0]
                 fluctuation[name] = StockData.diff(self.df[name].loc[start_ts]["Close"],
                                                         self.df[name].loc[end_ts]["Open"])[1]
         else:
             for name in stock:
+                if start_ts < self.df[name].index[0]:
+                    start_ts = self.df[name].index[0]
                 fluctuation[name] = StockData.diff(self.df[name].loc[start_ts]["High"],
                                                         self.df[name].loc[end_ts]["Low"])[1]
 
@@ -323,7 +327,7 @@ class StockData:
 
         return buttons
 
-    def box_plot(self, stock = None, start = "", end = "", method = "close-open"):
+    def box_plot(self, stock = None, start = "", end = "", period = None, method = "close-open"):
         '''
         Show a box plot of fluctuation, on which you can do some customization.
         :param stock: a sublist of self.stock, default value is self.stock
@@ -335,7 +339,7 @@ class StockData:
         :param method: a string which can be "close-open" or "high-low",
                        default value is "close-open".
         '''
-        df_fluctuation = self.fluctuation(stock, start, end, method, in_function = True)
+        df_fluctuation = self.fluctuation(stock, start, end, period, method, in_function = True)
 
         if not stock:
             stock = list(self.df.keys())
@@ -376,7 +380,7 @@ class StockData:
             raise ValueError("Time period should between in data's time range")
 
 
-        c = self.df[stock[0]][method]
+        c = self.df[stock[0]][method].loc[self.df[stock[0]].index.isin(pd.date_range(start_ts, end_ts))]
         c.columns = [s+"-"+stock[0] for s in c.columns]
         for i in range(1,len(stock)):
             a = self.df[stock[i]][method]

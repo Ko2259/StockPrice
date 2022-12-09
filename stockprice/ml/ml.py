@@ -137,7 +137,7 @@ class StockPrediction:
         update the train set until the given date.
 
         parameters:
-            date (Timestamp): will update the train set until the given date.
+            date (str): will update the train set until the given date.
             message (bool): whether we will need to print the message. When update inside of
                             of other functions, message = False.
         """
