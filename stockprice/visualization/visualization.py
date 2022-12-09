@@ -19,7 +19,7 @@ class StockData:
     parameters:
         df (dict): uses stock symbol as key and values are pd.DataFrame that stores
                    the stock price data
-        start_ts, end_ts (pd.Timestamp): the start and end date
+        start, end (str): the start and end date for the data
         open_days (int): number of market open days between start and end date
     """
     def __init__(self, stocks = ["^DJI"], start = "", end = "", period = None):
@@ -47,6 +47,9 @@ class StockData:
 
         self.start_ts, self.end_ts = StockData.check_open(start, end)
         self.open_days = self.count_open_days(self.start_ts, self.end_ts)
+        self.start = self.start_ts.strftime("%Y-%m-%d")
+        self.end = self.end_ts.strftime("%Y-%m-%d")
+        
 
         expire_after = dt.timedelta(days=3)
         session = requests_cache.CachedSession(cache_name='cache', expire_after=expire_after)
