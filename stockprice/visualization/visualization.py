@@ -96,8 +96,10 @@ class StockData:
         if period:
             count += 1
 
-        if count < 2:
+        if count == 0:
             return self.start_ts, self.end_ts
+        if count == 1:
+            raise ValueError("Either not give at all or give least two of start, end, period")
 
         if not start:
             start = pd.Timestamp(end)-pd.Timedelta(days = period-1)
@@ -162,7 +164,7 @@ class StockData:
 
     def next_open_day(date_ts):
         """
-        return the next market open date before the given date
+        return the next market open date after the given date
 
         parameter:
             date_ts (pd.Timestamp): the given date
@@ -230,6 +232,10 @@ class StockData:
             stock = list(self.df.keys())
 
         start_ts, end_ts = self.check_period(start, end, period)
+
+        if start_ts < self.start_ts or end_ts > self.end_ts:
+            raise ValueError("Time period should between in data's time range")
+
         start_ts, end_ts = StockData.check_open(start_ts, end_ts)
 
         fluctuation = {}
@@ -265,6 +271,10 @@ class StockData:
 
         start_ts, end_ts = self.check_period(start, end, period)
         start_ts, end_ts = StockData.check_open(start_ts, end_ts)
+
+        if start_ts < self.start_ts or end_ts > self.end_ts:
+            raise ValueError("Time period should between in data's time range")
+
 
         date_range = pd.date_range(start_ts, end_ts)
 
@@ -359,6 +369,10 @@ class StockData:
         start_ts, end_ts = self.check_period(start, end, period)
         start_ts, end_ts = StockData.check_open(start_ts, end_ts)
 
+        if start_ts < self.start_ts or end_ts > self.end_ts:
+            raise ValueError("Time period should between in data's time range")
+
+
         c = self.df[stock[0]][method]
         c.columns = [s+"-"+stock[0] for s in c.columns]
         for i in range(1,len(stock)):
@@ -399,6 +413,10 @@ class StockData:
 
         start_ts, end_ts = self.check_period(start, end, period)
         start_ts, end_ts = StockData.check_open(start_ts, end_ts)
+
+        if start_ts < self.start_ts or end_ts > self.end_ts:
+            raise ValueError("Time period should between in data's time range")
+
 
         for s in stock:
             temp = self.df[s].loc[start_ts:][:end_ts]
