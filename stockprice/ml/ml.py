@@ -152,8 +152,8 @@ class StockPrediction:
         if not self.check_day_open(date):
             if message:
                 print(f"The Stock Market if not open on {date.strftime('%Y-%m-%d')}"
-                    +", no update needed.")
-            return
+                    +", update until the last open date.")
+                date = StockData.last_open_day(date)
 
         if self.date_train >= date:
             if message:

@@ -10,31 +10,29 @@ from visualization import StockData
 
 class TestVisual(unittest.TestCase):
 
-	'''
-	Smoke test, see whether the class works
-	'''
-	
 	def test_smoke(self):
+		"""
+		Smoke test, see whether the class works
+		"""
 		start_time = "2022-01-05"
 		end_time = "2022-10-10"
 		data = StockData(["Meta"], start_time, end_time)
 		return
 
-	'''
-	test for start, end, period does not match
-	'''
 	def test_three_parameter(self):
+		"""
+		test for start, end, period does not match
+		"""
 		start_time = "2022-01-05"
 		end_time = "2022-01-10"
 		period = 6
 		with self.assertRaises(ValueError):
 			data = StockData(["Meta"], start_time, end_time, period)
 
-	'''
+	def test_count_open_days(self):
+		'''
 	test for the count of open days
 	'''
-
-	def test_count_open_days(self):
 		start_time = "2022-01-03"
 		end_time = "2022-01-24"
 		data = StockData(["Meta"], start_time, end_time)
@@ -50,33 +48,41 @@ class TestVisual(unittest.TestCase):
 		data = StockData(["Meta"], start_time, end_time)
 		self.assertEqual(data.open_days, 15)
 		return
-	
 
-	'''
-	Test whether the start date will be shifted to the last open date
-	'''
+	def test_open_days3(self):
+		"""
+		test whether open days equals length of data frame
+		"""
+		start_time = "2022-01-03"
+		end_time = "2022-05-22"
+		data = StockData(["Meta"], start_time, end_time)
+		self.assertEqual(data.open_days, len(data.df["Meta"]))
+		return
 	
 	def test_start_not_open(self):
+		"""
+		Test whether the start date will be shifted to the last open date
+		"""
 		start_time = "2022-01-01"
 		end_time = "2022-10-10"
 		data = StockData(start = start_time, end = end_time)
 		self.assertEqual(data.start_ts, pd.Timestamp("2021-12-31"))
 		return
 
-	'''
-	Test whether the end date witl be shifted to the last open date
-	'''
 	def test_end_not_open(self):
+		"""
+		Test whether the end date witl be shifted to the last open date
+		"""
 		start_time = "2022-01-03"
 		end_time = "2022-01-01"
 		data = StockData(start = start_time, end = end_time)
 		self.assertEqual(data.end_ts, pd.Timestamp("2022-01-03"))
 		return
 
-	'''
-	Test when end time is in the future
-	'''
 	def test_end_in_future(self):
+		"""
+		Test when end time is in the future
+		"""
 		start_time = "2022-01-01"
 		end_time = "2023-10-10"
 		with self.assertRaises(ValueError):
@@ -84,12 +90,10 @@ class TestVisual(unittest.TestCase):
 
 		return
 
-	'''
-	Test when start time is after than the end time
-	'''
-
-
 	def test_start_after_end(self):
+		"""
+		Test when start time is after than the end time
+		"""
 		start_time = "2022-01-03"
 		end_time = "2021-10-3"
 		with self.assertRaises(ValueError):
@@ -97,20 +101,33 @@ class TestVisual(unittest.TestCase):
 
 		return
 
-	'''
-	invalid stock name
-	'''
 	def test_invalid_stock(self):
+		"""
+		invalid stock name
+		"""
 		start_time = "2022-01-01"
 		end_time = "2022-10-10"
 		with self.assertRaises(ValueError):
 			data = StockData(["Metee"], start_time, end_time)
-		return
 
-	'''
-	Stock is invalid in the given date range
-	'''
+	def test_only_one_period(self):
+		start_time = "2022-06-01"
+		end_time = "2022-10-10"
+		data = StockData(["Meta"], start_time, end_time)
+		with self.assertRaises(ValueError):
+			data.total_fluctuation(period = 10)
+
+	def test_start_end_out_range(self):
+		start_time = "2022-06-01"
+		end_time = "2022-10-10"
+		data = StockData(["Meta"], start_time, end_time)
+		with self.assertRaises(ValueError):
+			data.total_fluctuation(start = "2022-05-01", end = "2022-10-01")
+
 	def test_stock_invalid_in_time_range(self):
+		"""
+		Stock is invalid in the given date range
+		"""
 		with self.assertRaises(ValueError):
 			data = StockData(["Meta"], "1990-01-01", "2000-01-01")
 		return

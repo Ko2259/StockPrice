@@ -99,8 +99,10 @@ class StockData:
         if period:
             count += 1
 
-        if count < 2:
+        if count == 0:
             return self.start_ts, self.end_ts
+        if count == 1:
+            raise ValueError("Either not give at all or give least two of start, end, period")
 
         if not start:
             start = pd.Timestamp(end)-pd.Timedelta(days = period-1)
@@ -165,7 +167,7 @@ class StockData:
 
     def next_open_day(date_ts):
         """
-        return the next market open date before the given date
+        return the next market open date after the given date
 
         parameter:
             date_ts (pd.Timestamp): the given date
@@ -233,15 +235,23 @@ class StockData:
             stock = list(self.df.keys())
 
         start_ts, end_ts = self.check_period(start, end, period)
+
+        if start_ts < self.start_ts or end_ts > self.end_ts:
+            raise ValueError("Time period should between in data's time range")
+
         start_ts, end_ts = StockData.check_open(start_ts, end_ts)
 
         fluctuation = {}
         if method == "close-open":
             for name in stock:
+                if start_ts < self.df[name].index[0]:
+                    start_ts = self.df[name].index[0]
                 fluctuation[name] = StockData.diff(self.df[name].loc[start_ts]["Close"],
                                                         self.df[name].loc[end_ts]["Open"])[1]
         else:
             for name in stock:
+                if start_ts < self.df[name].index[0]:
+                    start_ts = self.df[name].index[0]
                 fluctuation[name] = StockData.diff(self.df[name].loc[start_ts]["High"],
                                                         self.df[name].loc[end_ts]["Low"])[1]
 
@@ -268,6 +278,10 @@ class StockData:
 
         start_ts, end_ts = self.check_period(start, end, period)
         start_ts, end_ts = StockData.check_open(start_ts, end_ts)
+
+        if start_ts < self.start_ts or end_ts > self.end_ts:
+            raise ValueError("Time period should between in data's time range")
+
 
         date_range = pd.date_range(start_ts, end_ts)
 
@@ -313,7 +327,7 @@ class StockData:
 
         return buttons
 
-    def box_plot(self, stock = None, start = "", end = "", method = "close-open"):
+    def box_plot(self, stock = None, start = "", end = "", period = None, method = "close-open"):
         '''
         Show a box plot of fluctuation, on which you can do some customization.
         :param stock: a sublist of self.stock, default value is self.stock
@@ -325,7 +339,7 @@ class StockData:
         :param method: a string which can be "close-open" or "high-low",
                        default value is "close-open".
         '''
-        df_fluctuation = self.fluctuation(stock, start, end, method, in_function = True)
+        df_fluctuation = self.fluctuation(stock, start, end, period, method, in_function = True)
 
         if not stock:
             stock = list(self.df.keys())
@@ -362,7 +376,11 @@ class StockData:
         start_ts, end_ts = self.check_period(start, end, period)
         start_ts, end_ts = StockData.check_open(start_ts, end_ts)
 
-        c = self.df[stock[0]][method]
+        if start_ts < self.start_ts or end_ts > self.end_ts:
+            raise ValueError("Time period should between in data's time range")
+
+
+        c = self.df[stock[0]][method].loc[self.df[stock[0]].index.isin(pd.date_range(start_ts, end_ts))]
         c.columns = [s+"-"+stock[0] for s in c.columns]
         for i in range(1,len(stock)):
             a = self.df[stock[i]][method]
@@ -402,6 +420,10 @@ class StockData:
 
         start_ts, end_ts = self.check_period(start, end, period)
         start_ts, end_ts = StockData.check_open(start_ts, end_ts)
+
+        if start_ts < self.start_ts or end_ts > self.end_ts:
+            raise ValueError("Time period should between in data's time range")
+
 
         for s in stock:
             temp = self.df[s].loc[start_ts:][:end_ts]
