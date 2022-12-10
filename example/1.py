@@ -1,5 +1,5 @@
-#import sys
-#sys.path.append('../')
+import sys
+sys.path.append('../')
 
 import pandas as pd
 
@@ -14,3 +14,9 @@ print(model.train["Meta"], model.train["AMZN"])
 print(model.predict()["Meta"])
 print(model.date_pred, model.date_train)
 '''
+
+data = StockData(["Meta", "AMZN", "MSFT", "AAPL", "MCD", "COST", "TM"], "2022-04-01", "2022-06-01")
+model = StockPrediction(data)
+
+eva = StockEvaluation(model, asset = 100)
+eva.evaluate(20, weighted = True, graph = True)

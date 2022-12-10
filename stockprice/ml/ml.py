@@ -39,6 +39,10 @@ class StockPrediction:
         stocks, start, end, period : If data is not given, we will use these to build a
                                      a StockData class
         """
+        expire_after = dt.timedelta(days=3)
+        session = requests_cache.CachedSession(cache_name='cache', expire_after=expire_after)
+        session.headers = DEFAULT_HEADERS
+
         if not data:
             self.data = StockData(stocks, start, end, period)
         else:
@@ -57,6 +61,7 @@ class StockPrediction:
             self.pred[stock] = pd.DataFrame()
             self.date_pred = self.train[stock]["Date"].iloc[-1]
             self.date_train = self.date_pred
+        self.burn_in = len(self.train[self.stocks[0]])
 
     def check_day_open(self, date):
         """
@@ -153,7 +158,7 @@ class StockPrediction:
             if message:
                 print(f"The Stock Market if not open on {date.strftime('%Y-%m-%d')}"
                     +", update until the last open date.")
-                date = StockData.last_open_day(date)
+            date = StockData.last_open_day(date)
 
         if self.date_train >= date:
             if message:
@@ -161,9 +166,6 @@ class StockPrediction:
                     +"no update needed")
             return
 
-        expire_after = dt.timedelta(days=3)
-        session = requests_cache.CachedSession(cache_name='cache', expire_after=expire_after)
-        session.headers = DEFAULT_HEADERS
         ### update model, train, y
         for stock in self.stocks:
             data = DataReader(stock, 'yahoo', self.date_train+pd.Timedelta(days = 1), date)

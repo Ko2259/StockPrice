@@ -379,11 +379,11 @@ class StockData:
         if start_ts < self.start_ts or end_ts > self.end_ts:
             raise ValueError("Time period should between in data's time range")
 
-
-        c = self.df[stock[0]][method].loc[self.df[stock[0]].index.isin(pd.date_range(start_ts, end_ts))]
+        date_range = pd.date_range(start_ts, end_ts)
+        c = self.df[stock[0]][method].loc[self.df[stock[0]].index.isin(date_range)]
         c.columns = [s+"-"+stock[0] for s in c.columns]
-        for i in range(1,len(stock)):
-            a = self.df[stock[i]][method]
+        for name in stock[1:]:
+            a = self.df[name][method].loc[self.df[name].index.isin(date_range)]
             a.columns = [s+"-"+stock[i] for s in a.columns]
             c = pd.concat([c,a], axis = 1)
 
