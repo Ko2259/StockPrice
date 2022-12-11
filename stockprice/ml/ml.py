@@ -172,7 +172,7 @@ class StockPrediction:
             train, y = self.get_train_y(data)
             self.train[stock] = pd.concat([self.train[stock], train]).reset_index(drop = True)
             self.y[stock] = pd.concat([self.y[stock], y]).reset_index(drop = True)
-            self.model[stock].update(y = y)
+            self.model[stock].update(y = self.y[stock][-len(data):])
         self.date_train = date
 
         return
