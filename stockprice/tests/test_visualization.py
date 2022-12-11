@@ -127,5 +127,25 @@ class TestVisual(unittest.TestCase):
         with self.assertRaises(ValueError):
             data = StockData(["Meta"], "1990-01-01", "2000-01-01")
 
+    def test_stock_not_in_model(self):
+        """
+        Stock is not in the model
+        """
+        start_time = "2022-06-01"
+        end_time = "2022-10-10"
+        data = StockData(["Meta"], start_time, end_time)
+        with self.assertRaises(ValueError):
+            data.price_plot(stocks = ["Meta", "AMZN"])
+
+    def test_stock_empty(self):
+        """
+        when the input stock is empty
+        """
+        start_time = "2022-06-01"
+        end_time = "2022-10-10"
+        data = StockData(["Meta"], start_time, end_time)
+        columns = data.total_fluctuation().columns
+        self.assertEqual(columns, data.stocks)
+
 if __name__ == "__main__":
     unittest.main()

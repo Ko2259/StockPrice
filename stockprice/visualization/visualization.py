@@ -34,6 +34,7 @@ class StockData:
                               two of start, end, period should be given.
         """
         self.df = {}
+        self.stocks = stocks
         count = 0
         if start:
             count += 1
@@ -49,8 +50,6 @@ class StockData:
         self.open_days = self.count_open_days(self.start_ts, self.end_ts)
         self.start = self.start_ts.strftime("%Y-%m-%d")
         self.end = self.end_ts.strftime("%Y-%m-%d")
-        
-
         expire_after = dt.timedelta(days=3)
         session = requests_cache.CachedSession(cache_name='cache', expire_after=expire_after)
         session.headers = DEFAULT_HEADERS
@@ -75,6 +74,17 @@ class StockData:
                                             zip(self.df[name]["Open"], self.df[name]["Close"])]
             self.df[name]["high-low"] = [abs(StockData.diff(x,y)[0]) for x,y in
                                             zip(self.df[name]["High"], self.df[name]["Low"])]
+
+    def check_stocks(self, stocks):
+        """
+        Check that stocks is non-empty and every stock is in the model.
+        """
+        if not stocks:
+            raise ValueError("list of stocks should not be empty.")
+
+        for name in stocks:
+            if not name in self.stocks:
+                raise ValueError(f"{name} is not in the model.")
 
     def check_period(self, start, end, period):
         """
@@ -217,13 +227,13 @@ class StockData:
         percent = str(round(result*100, 2))+"%"
         return result, percent
 
-    def total_fluctuation(self, stock = None, start = "", end = "", period = None,
+    def total_fluctuation(self, stocks = None, start = "", end = "", period = None,
                             method = "close-open"):
         """
         return the fluctuation during the given time period
 
         parameters:
-            stock (list of string): a list of stock symbols, default would be all of the
+            stocks (list of string): a list of stock symbols, default would be all of the
                                     stocks in the class.
             start, end (string): start and end date.
             period (int): number of days between start and end.
@@ -231,8 +241,10 @@ class StockData:
                              by the open value and close value. If method = "high-low",
                              then it is calculated by high value and low value.
         """
-        if not stock:
-            stock = list(self.df.keys())
+        if not stocks:
+            stocks = self.stocks
+        else:
+            self.check_stocks(stocks)
 
         start_ts, end_ts = self.check_period(start, end, period)
 
@@ -243,13 +255,13 @@ class StockData:
 
         fluctuation = {}
         if method == "close-open":
-            for name in stock:
+            for name in stocks:
                 if start_ts < self.df[name].index[0]:
                     start_ts = self.df[name].index[0]
                 fluctuation[name] = StockData.diff(self.df[name].loc[start_ts]["Close"],
                                                         self.df[name].loc[end_ts]["Open"])[1]
         else:
-            for name in stock:
+            for name in stocks:
                 if start_ts < self.df[name].index[0]:
                     start_ts = self.df[name].index[0]
                 fluctuation[name] = StockData.diff(self.df[name].loc[start_ts]["High"],
@@ -257,13 +269,13 @@ class StockData:
 
         return pd.DataFrame(data = fluctuation, index = ["fluctuaion"])
 
-    def fluctuation(self, stock = None, start = "", end = "", period = None,
+    def fluctuation(self, stocks = None, start = "", end = "", period = None,
                             method = "close-open", in_function = False):
         """
         return the daily fluctuation.
 
         parameters:
-            stock (list of string): a list of stock symbols, default would be all of the
+            stocks (list of string): a list of stock symbols, default would be all of the
                                     stocks in the class.
             start, end (string): start and end date.
             period (int): number of days between start and end.
@@ -273,8 +285,10 @@ class StockData:
             in_function (bool): True means we are using this method inside some other function
                                 so no message will be printed.
         """
-        if not stock:
-            stock = list(self.df.keys())
+        if not stocks:
+            stocks = self.stocks
+        else:
+            self.check_stocks(stocks)
 
         start_ts, end_ts = self.check_period(start, end, period)
         start_ts, end_ts = StockData.check_open(start_ts, end_ts)
@@ -286,14 +300,14 @@ class StockData:
         date_range = pd.date_range(start_ts, end_ts)
 
         result = pd.DataFrame()
-        for name in stock:
+        for name in stocks:
             result[name] = self.df[name].loc[self.df[name].index.isin(date_range), :][method]
 
         max_inc_date = result.idxmax()
         max_dec_date = result.idxmin()
 
         if not in_function:
-            for name in stock:
+            for name in stocks:
                 temp = str(round(np.mean(result[name])*100, 2))+"%"
                 print(f"The average for {name} is: {temp} \n")
                 print(f"The max increase/min decrease of {name} occured on "
@@ -327,10 +341,10 @@ class StockData:
 
         return buttons
 
-    def box_plot(self, stock = None, start = "", end = "", period = None, method = "close-open"):
+    def box_plot(self, stocks = None, start = "", end = "", period = None, method = "close-open"):
         '''
         Show a box plot of fluctuation, on which you can do some customization.
-        :param stock: a sublist of self.stock, default value is self.stock
+        :param stocks: a sublist of self.stocks, default value is self.stocks
         :param start: a string of selected start date, should be in the range of
                       (self.start, self.end). Default value is self.start
         :param end: a string of of selected end date, should be in the range of
@@ -339,14 +353,17 @@ class StockData:
         :param method: a string which can be "close-open" or "high-low",
                        default value is "close-open".
         '''
-        df_fluctuation = self.fluctuation(stock, start, end, period, method, in_function = True)
+        df_fluctuation = self.fluctuation(stocks, start, end, period, method, in_function = True)
 
-        if not stock:
-            stock = list(self.df.keys())
-        temp = ", ".join(stock)
+        if not stocks:
+            stocks = self.stocks
+        else:
+            self.check_stocks(stocks)
+
+        temp = ", ".join(stocks)
 
         fig = go.Figure()
-        for s in stock:
+        for s in stocks:
             fig.add_trace(go.Box(y=df_fluctuation[s],name=s))
 
         fig.update_layout(title = 'Box Plot for Fluctuation of ' + temp,
@@ -356,10 +373,10 @@ class StockData:
 
         fig.show()
 
-    def price_plot(self, stock = None, start = "", end = "", period = None, method = ["Open"]):
+    def price_plot(self, stocks = None, start = "", end = "", period = None, method = ["Open"]):
         '''
         Show a plot of stock price, on which you can do some customization.
-        :param stock: a sublist of self.stock, default value is self.stock
+        :param stocks: a sublist of self.stocks, default value is self.stocks
         :param start: a string of selected start date, should be in the range
                       of (self.start, self.end). Default value is self.start
         :param end: a string of of selected end date, should be in the range
@@ -367,10 +384,11 @@ class StockData:
                     Default value is self.end.
         :param method: a sublist of ["High","Low","Open","Close"], default value is ["Open"].
         '''
-        if not stock:
-            stock = list(self.df.keys())
+        if not stocks:
+            stocks = self.stocks
+        else:
+            self.check_stocks(stocks)
 
-        ### add warning when stock is more than 10
         ### add error message when input value not correct
 
         start_ts, end_ts = self.check_period(start, end, period)
@@ -380,15 +398,15 @@ class StockData:
             raise ValueError("Time period should between in data's time range")
 
         date_range = pd.date_range(start_ts, end_ts)
-        c = self.df[stock[0]][method].loc[self.df[stock[0]].index.isin(date_range)]
-        c.columns = [s+"-"+stock[0] for s in c.columns]
-        for name in stock[1:]:
+        c = self.df[stocks[0]][method].loc[self.df[stocks[0]].index.isin(date_range)]
+        c.columns = [s+"-"+stocks[0] for s in c.columns]
+        for name in stocks[1:]:
             a = self.df[name][method].loc[self.df[name].index.isin(date_range)]
-            a.columns = [s+"-"+stock[i] for s in a.columns]
+            a.columns = [s+"-"+name for s in a.columns]
             c = pd.concat([c,a], axis = 1)
 
         c_1 = c.reset_index()
-        temp = ", ".join(stock)
+        temp = ", ".join(stocks)
         fig = px.line(c_1,x="Date",y=list(c_1.columns)[1:],
                         title='Stock Price of ' + temp,render_mode='webg1')
 
@@ -405,18 +423,20 @@ class StockData:
 
         fig.show()
 
-    def candle_plot(self, stock = None, start = "", end = "", period = None):
+    def candle_plot(self, stocks = None, start = "", end = "", period = None):
         '''
         Show a candlestick plot of stock price, on which you can do some customization.
-        :param stock: a sublist of self.stock, default value is self.stock
+        :param stocks: a sublist of self.stocks, default value is self.stocks
         :param start: a string of selected start date, should be in the range
                       of (self.start, self.end). Default value is self.start
         :param end: a string of of selected end date, should be in the range
                     of (self.start, self.end), and later than the "start" param.
                     Default value is self.end.
         '''
-        if not stock:
-            stock = list(self.df.keys())
+        if not stocks:
+            stocks = self.stocks
+        else:
+            self.check_stocks(stocks)
 
         start_ts, end_ts = self.check_period(start, end, period)
         start_ts, end_ts = StockData.check_open(start_ts, end_ts)
@@ -425,7 +445,7 @@ class StockData:
             raise ValueError("Time period should between in data's time range")
 
 
-        for s in stock:
+        for s in stocks:
             temp = self.df[s].loc[start_ts:][:end_ts]
             c = temp.reset_index()
 

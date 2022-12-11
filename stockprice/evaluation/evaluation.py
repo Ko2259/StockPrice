@@ -39,6 +39,17 @@ class StockEvaluation:
         session = requests_cache.CachedSession(cache_name='cache', expire_after=expire_after)
         session.headers = DEFAULT_HEADERS
 
+    def check_stocks(self, stocks):
+        """
+        Check that stocks is non-empty and every stock is in the model.
+        """
+        if not stocks:
+            raise ValueError("list of stocks should not be empty.")
+
+        for name in stocks:
+            if not name in self.stocks:
+                raise ValueError(f"{name} is not in the model.")
+
     def invest(self, date, weighted = False):
         """
         Invest on the given date. The strategy is that we buy the stock with highest
@@ -46,6 +57,10 @@ class StockEvaluation:
 
         parameter:
             date (timestamp): date for investment.
+            weighted (bool): True means we will invest on all the stocks that has
+                             positive predicted profit. Default is False, means we
+                             will only invest the stock with the largest predicted
+                             profit.
         """
         if isinstance(date, str):
             date = pd.Timestamp(date)
@@ -89,9 +104,9 @@ class StockEvaluation:
                 print(f"On {date.strftime('%Y-%m-%d')}, we invest the stock {stock_best}, "
                     f"and now the asset becomes {round(new, 5)}")
             else:
-                total_profit = sum([profit for profit, stock in profit_positive])
-                new = sum([self.get_return(date, stock) * self.asset * profit / total_profit
-                            for profit, stock in profit_positive])
+                total_profit = sum(profit for profit, stock in profit_positive)
+                new = sum(self.get_return(date, stock) * self.asset * profit / total_profit
+                            for profit, stock in profit_positive)
                 stocks = [stock for profit, stock in profit_positive]
                 print(f"On {date.strftime('%Y-%m-%d')}, we invest on {len(profit_positive)}"
                         +f" stocks, which are {','.join(stocks)},"
@@ -140,6 +155,8 @@ class StockEvaluation:
 
         parameter:
             days (int): number of days we would like to invest.
+            weighted (bool): whether we shold use weighted investment
+                             stragy in invest method.
         """
         date = self.date
         if graph:
@@ -194,16 +211,30 @@ class StockEvaluation:
         return buttons
 
     def graph(self, stocks = None, days = None):
+        """
+        plot the predicted value vs real value.
+
+        parameters:
+            stocks (list of str): stock symbols
+            days (int): number of days we want to plot,
+                         should not exceed the predicted days.
+        """
         if not stocks:
-            stocks = self.model.stocks
+            stocks = self.stocks
+        else:
+            self.check_stocks(stocks)
 
         if not days:
             days = len(self.model.pred[stocks[0]])
+        else:
+            if days > len(self.model.pred[stocks[0]]):
+                raise ValueError("not enough predicted days in the model.")
 
         graph_data = {}
         for name in stocks:
             graph_data[name+"-pred"] = self.model.pred[name][name][:days].values
-            graph_data[name] = self.model.train[name][self.model.val][self.model.burn_in: self.model.burn_in + days].values
+            temp = self.model.train[name][self.model.val]
+            graph_data[name] = temp[self.model.burn_in: self.model.burn_in + days].values
 
         pred = pd.DataFrame(data = graph_data, index = self.model.pred[stocks[0]].index)
         pred.reset_index(inplace = True)
@@ -223,18 +254,3 @@ class StockEvaluation:
                   height=600)
 
         fig.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

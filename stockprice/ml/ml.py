@@ -48,7 +48,7 @@ class StockPrediction:
         else:
             self.data = data
 
-        self.stocks = list(self.data.df.keys())
+        self.stocks = self.data.stocks
         self.train, self.y = {}, {}
         self.model = {}
         self.pred = {}
