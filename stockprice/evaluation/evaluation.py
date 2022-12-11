@@ -236,7 +236,7 @@ class StockEvaluation:
             temp = self.model.train[name][self.model.val]
             graph_data[name] = temp[self.model.burn_in: self.model.burn_in + days].values
 
-        pred = pd.DataFrame(data = graph_data, index = self.model.pred[stocks[0]].index)
+        pred = pd.DataFrame(data = graph_data, index = self.model.pred[stocks[0]].index[:days])
         pred.reset_index(inplace = True)
 
         fig = px.line(pred,x="index",y=list(pred.columns)[1:],
