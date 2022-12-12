@@ -7,8 +7,6 @@ from pandas_datareader.data import DataReader
 import requests_cache
 from pandas_datareader.yahoo.headers import DEFAULT_HEADERS
 import plotly.express as px
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 
 from stockprice import StockData
 

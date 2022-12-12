@@ -19,7 +19,7 @@ class TestVisual(unittest.TestCase):
         end_time = "2022-10-10"
         data = StockData(["Meta"], start_time, end_time)
         model = StockPrediction(data)
-        
+
     def test_date_train(self):
         """
         test whether the date_train is the same as end time
