@@ -13,11 +13,18 @@ StockPrice requires a Python environment higher than Python 3.0.
 
 ## Installation
 
-- Method 1: Install StockPrice tool using command line
+- Method 1: Install from the Pipit
 
-	`pip install git+https://github.com/Ko2259/Stock_Price.git`
+	`pip install stockprice`
 
-- Method 2: Clone this repository and set up a virtual environment(suggested method due to the dependencies)
+	If this does not work, run the follow command first
+	`pip install datetime pandas_datareader plotly sktime tbats requests_cache pandas_market_calendars`
+
+- Method 2: Install from the GitHub repo
+
+	`pip install git+https://github.com/Ko2259/StockPrice.git`
+
+- Method 3: Clone this repository and set up a virtual environment(suggested method due to the dependencies)
 
 	1. Open the terminal
 	2. Clone the repository using `git clone git@github.com:Ko2259/StockPrice.git`
