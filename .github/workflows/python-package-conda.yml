@@ -25,7 +25,6 @@ jobs:
     - name: Lint with pylint
       run: |
         pylint $(git ls-files '*.py') --exit-zero
-    - name: Test with pytest
+    - name: Test with unittest
       run: |
-        conda install pytest
-        pytest
+        python -m unittest discover -s stockprice -b
