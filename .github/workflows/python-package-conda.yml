@@ -27,4 +27,4 @@ jobs:
         pylint $(git ls-files '*.py') --exit-zero
     - name: Test with unittest
       run: |
-        python -m unittest discover -s stockprice -b
+        python -m unittest discover -s stocktool -b
