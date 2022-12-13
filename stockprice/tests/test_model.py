@@ -5,7 +5,7 @@ import unittest
 import pandas as pd
 
 from visualization import StockData
-from ml import StockPrediction
+from model import StockPrediction
 
 class TestVisual(unittest.TestCase):
     """

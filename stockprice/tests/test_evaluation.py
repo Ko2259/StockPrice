@@ -3,12 +3,12 @@ Test for the evaluation submodule
 """
 import unittest
 
-from visualization import StockData
-from ml import StockPrediction
-from evaluation import StockEvaluation
-
 import sys
 sys.path.append("../")
+
+from visualization import StockData
+from model import StockPrediction
+from evaluation import StockEvaluation
 
 
 class TestVisual(unittest.TestCase):

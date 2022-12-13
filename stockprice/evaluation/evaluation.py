@@ -8,7 +8,7 @@ import requests_cache
 from pandas_datareader.yahoo.headers import DEFAULT_HEADERS
 import plotly.express as px
 
-from stockprice import StockData
+from stockprice import StockData#, StockPrediction
 
 class StockEvaluation:
     """
