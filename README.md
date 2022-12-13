@@ -18,6 +18,7 @@ StockPrice requires a Python environment higher than Python 3.0.
 	`pip install stockprice`
 
 	If this does not work, run the follow command first
+
 	`pip install datetime pandas_datareader plotly sktime tbats requests_cache pandas_market_calendars`
 
 - Method 2: Install from the GitHub repo
