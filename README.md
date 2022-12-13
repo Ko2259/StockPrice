@@ -1,5 +1,6 @@
-# StockPrice [![Python Package using 
+[![Python Package using 
 Conda](https://github.com/Ko2259/StockPrice/actions/workflows/python-package-conda.yml/badge.svg)](https://github.com/Ko2259/StockPrice/actions/workflows/python-package-conda.yml)
+# StockPrice 
 A Tool for visualize and forecast the stock price, and give user investment strategy.
 
 ## Overview
