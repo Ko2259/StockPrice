@@ -1,6 +1,6 @@
 [![Python Package using 
 Conda](https://github.com/Ko2259/StockPrice/actions/workflows/python-package-conda.yml/badge.svg)](https://github.com/Ko2259/StockPrice/actions/workflows/python-package-conda.yml)
-# StockPrice 
+# StockTool
 A Tool for visualize and forecast the stock price, and give user investment strategy.
 
 ## Overview
@@ -15,7 +15,7 @@ StockPrice requires a Python environment higher than Python 3.0.
 
 - Method 1: Install from the Pipit
 
-	`pip install stockprice`
+	`pip install stocktool`
 
 	If this does not work, run the follow command first
 
@@ -23,12 +23,12 @@ StockPrice requires a Python environment higher than Python 3.0.
 
 - Method 2: Install from the GitHub repo
 
-	`pip install git+https://github.com/Ko2259/StockPrice.git`
+	`pip install git+https://github.com/Ko2259/StockTool.git`
 
 - Method 3: Clone this repository and set up a virtual environment(suggested method due to the dependencies)
 
 	1. Open the terminal
-	2. Clone the repository using `git clone git@github.com:Ko2259/StockPrice.git`
+	2. Clone the repository using `git clone git@github.com:Ko2259/StockTool.git`
 	3. Change the directory to StockPrice using `cd StockPrice`
 	4. Set up a new virtual environment using `condo env create -f environment.yml`
 	5. Activate the virtual environment using `condo activate stockprice`
