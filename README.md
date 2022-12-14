@@ -85,7 +85,7 @@ Example please refer to `StockTool/examples/visualization.ipynb`.
 
 - Below are the visualization functions in our tool:
 
-	1, `data.box_plot()`: to see the fluctuation for each stock during this period
+	1. `data.box_plot()`: to see the fluctuation for each stock during this period
 	2. `data.price_plot()`: to see the stock price for each stock on every market open day
 	3. `data.candle_plot()`: to see the candlestick chart for each stock on every market open day
 
@@ -97,7 +97,7 @@ Example please refer to `StockTool/examples/visualization.ipynb`.
 
 	> `model = stocktool.StockPrediction(data, val)`, where `val="Close"` or `val="Open"`
 
-- Or you can construct the `model` without accessing the data first:
+	Or you can construct the `model` without accessing the data first:
 
 	> `model = stocktool.StockPrediction(val, stocks, start, end, period)`
 
