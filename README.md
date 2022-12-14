@@ -62,10 +62,9 @@ The `stocktool` directory includes `visualization` module for visualize stocks, 
 
 ### Data access
 
-- After you installing this tool on your local machine or on a virtual environment, and importing this tool using `import stocktool`, you can access stock data with built-in function:
-	> `data = stocktool.StockData(stocks, start, end, period)`
+- After you installing this tool on your local machine or on a virtual environment, and importing this tool using `import stocktool`, you can access stock data with built-in function below, where we read stock data through Yahoo Finance API.
 
-where we read stock data through Yahoo Finance API.
+	> `data = stocktool.StockData(stocks, start, end, period)`
 
 - In the function `StockData`:
 
@@ -73,54 +72,56 @@ where we read stock data through Yahoo Finance API.
 	2.  you can specify the start date and the end date, or you can only specify the start date along with a specified period.
 
 - Then you'll get a data structure containing the pandas dataframes, start date, end date and open days.
-	> `data.df`: a dictionary contains pandas dataframe for each stock
-	> `data.start`: adjust input start date to a stock market open day
-	> `data.end`: adjust input end date to a stock market open day
-	> `data.open_days`: stock market open days
+	1. `data.df`: a dictionary contains pandas dataframe for each stock
+	2. `data.start`: adjust input start date to a stock market open day
+	3. `data.end`: adjust input end date to a stock market open day
+	4. `data.open_days`: stock market open days
 
 Example please refer to `StockTool/examples/visualization.ipynb`.
 
 ### Visualization
 
-After you accessing the `data`, you can visualize it with our built-in functions, or you can make some other plots on your own.
+- After you accessing the `data`, you can visualize it with our built-in functions, or you can make some other plots on your own.
 
-Below are the visualization functions in our tool:
+- Below are the visualization functions in our tool:
 
-> `data.box_plot()`: to see the fluctuation for each stock during this period
-> `data.price_plot()`: to see the stock price for each stock on every market open day
-> `data.candle_plot()`: to see the candlestick chart for each stock on every market open day
+	1, `data.box_plot()`: to see the fluctuation for each stock during this period
+	2. `data.price_plot()`: to see the stock price for each stock on every market open day
+	3. `data.candle_plot()`: to see the candlestick chart for each stock on every market open day
 
 Example please refer to `StockTool/examples/visualization.ipynb`.
 
 ### Forecasting
 
-After you accessing the `data`, you can train the `data` as below:
-> `model = stocktool.StockPrediction(data, val)`, where `val="Close"` or `val="Open"`
+- After you accessing the `data`, you can train the `data` as below:
 
-Or you can construct the `model` without accessing the data first:
-> `model = stocktool.StockPrediction(val, stocks, start, end, period)`
+	> `model = stocktool.StockPrediction(data, val)`, where `val="Close"` or `val="Open"`
 
-After you training the `model`, you can forecast the stock price in next few days.
-> `model.predict(days, level)`: a dictionary contains the prediction for each stock, along with the confidence interval
+- Or you can construct the `model` without accessing the data first:
 
-You may also want to update the model with new data points, so you can update it with stock data till a new end date.
-> 1. first update model: `model.update(date)`
-> 2. then forecast using updated model: `model.predict()`
+	> `model = stocktool.StockPrediction(val, stocks, start, end, period)`
+
+- After you training the `model`, you can forecast the stock price in next few days.
+	> `model.predict(days, level)`: a dictionary contains the prediction for each stock, along with the confidence interval
+
+- You may also want to update the model with new data points, so you can update it with stock data till a new end date.
+	1. first update model: `model.update(date)`
+	2. then forecast using updated model: `model.predict()`
 
 Example please refer to `StockTool/examples/model.ipynb`.
 
 ### Evaluation
 
-After training data in `model`, we build a method to evaluate our two investment strategies.
+- After training data in `model`, we build a method to evaluate our two investment strategies.
 
-- With specified asset, the first strategy is to invest in the stock with highest predicted profit every day.
-- The second strategy is to split asset to invest in all stocks with positive predicted profit every day.
+	1. With specified asset, the first strategy is to invest in the stock with highest predicted profit every day.
+	2. The second strategy is to split asset to invest in all stocks with positive predicted profit every day.
 
-Here, we evaluate as below:
+- Here, we evaluate as below:
 
-> 1. first get the evaluation structure: `eva = stocktoll.StockEvaluation(model, asset)`
-> 2. after getting the evaluation structure, evaluate the strategy: `eva.evaluate(days, weighted, graph)`
-> 3. after evaluation, draw the graph of real stock price and predicted price: `eva.graph(stocks, days)`
+	1. first get the evaluation structure: `eva = stocktoll.StockEvaluation(model, asset)`
+	2. after getting the evaluation structure, evaluate the strategy: `eva.evaluate(days, weighted, graph)`
+	3. after evaluation, draw the graph of real stock price and predicted price: `eva.graph(stocks, days)`
 
 Example please refer to `StockTool/examples/evaluation.ipynb`.
 
