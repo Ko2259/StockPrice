@@ -62,8 +62,8 @@ The `stocktool` directory includes `visualization` module for visualize stocks, 
 
 ### Data access
 
-After you installing this tool on your local machine or on a virtual environment, and importing this tool using `import stocktool`, you can access stock data with built-in function:
-> `data = stocktool.StockData(stocks, start, end, period)`
+	After you installing this tool on your local machine or on a virtual environment, and importing this tool using `import stocktool`, you can access stock data with built-in function:
+	> `data = stocktool.StockData(stocks, start, end, period)`
 
 where we read stock data through Yahoo Finance API.
 
