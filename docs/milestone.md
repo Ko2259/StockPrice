@@ -8,7 +8,7 @@
 fluctuation.
   >Done
 - Plot the daily fluctuation. 
-  >Done. Matplotlib version.
+  >Done. Matplotlib version. Changed to poorly version
 - Plot the price for given stocks and given date range.
   >Done. Plotly version.
 - Candle plot.
@@ -17,8 +17,23 @@ fluctuation.
  - TBATS model to do prediction, prediction interval.
    > Done
  - update method that can update the model daily.
+   > Done. Can update until the given date.
  - test how many profit we can get by running this model.
- - deal with the seasonality issue.
- - possible future models.
-
+   > Done. Build invest and evaluate method in evaluation submodule.
+ - Plot for predicted vs real value.
+   > Done. The graph method in evaluation submodule.
+# Unittest
+ - For visualization submodule
+   > Done.
+ - For model submodule
+   > Done.
+ - For evaluation submodule
+   > Done.
+# Environment issue
+ - Create environment.yml
+   > Done.
+ - Create GitHub workflow
+   > Done. Changed to pylint and unittest
+ - Upload to Pypi
+   > Done.
 
