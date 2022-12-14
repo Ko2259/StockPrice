@@ -9,7 +9,7 @@ One investor might want to predict the trend for a specific stock, and to know w
 
 ## Requirements
 
-StockTool requires a Python environment higher than Python 3.0.
+StockTool requires a Python environment higher than Python 3.6.
 
 ## Installation
 
@@ -31,7 +31,7 @@ StockTool requires a Python environment higher than Python 3.0.
 	2. Clone the repository using `git clone git@github.com:Ko2259/StockTool.git`
 	3. Change the directory to StockPrice using `cd StockTool`
 	4. Set up a new virtual environment using `conda env create -f environment.yml`
-	5. Activate the virtual environment using `conda activate test`
+	5. Activate the virtual environment using `conda activate stocktool`
 	6. After finish analyzing, deactivate the virtual environment using `conda deactivate`
 
 
@@ -48,8 +48,9 @@ StockTool requires a Python environment higher than Python 3.0.
 │   ├── milestone.md
 ├── environment.yml
 ├── example
-├── pyproject.toml
-├── setup.cfg
+│   ├── evaluation.ipynb
+│   ├── model.ipynb
+│   └── visualization.ipynb
 └── stocktool
     ├── evaluation
     ├── model
