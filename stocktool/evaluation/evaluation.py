@@ -226,7 +226,7 @@ class StockEvaluation:
             days = len(self.model.pred[stocks[0]])
         else:
             if days > len(self.model.pred[stocks[0]]):
-                raise ValueError("not enough predicted days in the model.")
+                raise ValueError(f"only {len(self.model.pred)} predicted days in the model.")
 
         graph_data = {}
         for name in stocks:
