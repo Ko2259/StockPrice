@@ -3,15 +3,15 @@ Conda](https://github.com/Ko2259/StockPrice/actions/workflows/python-package-con
 # StockTool
 A Tool for visualize and forecast the stock price, and give user investment strategy.
 
-# Overview
+## Overview
 
 One investor might want to predict the trend for a specific stock, and to know which stock is better to invest in based on the past stock price. As stock market changing so rapidly, it might be hard to make the right investment strategy by analyzing the data manually. Thus, we built a tool for users to visualize, analyze, forecast and evaluate stocks.
 
-# Requirements
+## Requirements
 
 StockTool requires a Python environment higher than Python 3.6.
 
-# Installation
+## Installation
 
 - Method 1: Install from the Pipit
 
@@ -35,9 +35,9 @@ StockTool requires a Python environment higher than Python 3.6.
 	6. After finish analyzing, deactivate the virtual environment using `conda deactivate`
 
 
-# Usage
+## Usage
 
-## Repository Structure
+### Repository Structure
 
 ```bash
 .
@@ -60,27 +60,27 @@ StockTool requires a Python environment higher than Python 3.6.
 
 The `stocktool` directory includes `visualization` module for visualize stocks, `model` module for analyze and forecast future stock price, `evaluation` module for evaluate invest profit, and unit tests in `tests` module. The `example` directory provides examples which help new users learn how to use this tool.
 
-## Data access
+### Data access
 
-After you installing this tool on your local machine or on a virtual environment, and importing this tool using `import stocktool`, you can access stock data with built-in function:
-> `data = stocktool.StockData(stocks, start, end, period)`
+- After you installing this tool on your local machine or on a virtual environment, and importing this tool using `import stocktool`, you can access stock data with built-in function:
+	> `data = stocktool.StockData(stocks, start, end, period)`
 
 where we read stock data through Yahoo Finance API.
 
-In the function `StockData`:
+- In the function `StockData`:
 
-- you can specify one stock, or many stocks with their Dow Jones Index;
--  you can specify the start date and the end date, or you can only specify the start date along with a specified period.
+	1. you can specify one stock, or many stocks with their Dow Jones Index;
+	2.  you can specify the start date and the end date, or you can only specify the start date along with a specified period.
 
-Then you'll get a data structure containing the pandas dataframes, start date, end date and open days.
-> `data.df`: a dictionary contains pandas dataframe for each stock
-> `data.start`: adjust input start date to a stock market open day
-> `data.end`: adjust input end date to a stock market open day
-> `data.open_days`: stock market open days
+- Then you'll get a data structure containing the pandas dataframes, start date, end date and open days.
+	> `data.df`: a dictionary contains pandas dataframe for each stock
+	> `data.start`: adjust input start date to a stock market open day
+	> `data.end`: adjust input end date to a stock market open day
+	> `data.open_days`: stock market open days
 
 Example please refer to `StockTool/examples/visualization.ipynb`.
 
-## Visualization
+### Visualization
 
 After you accessing the `data`, you can visualize it with our built-in functions, or you can make some other plots on your own.
 
@@ -92,7 +92,7 @@ Below are the visualization functions in our tool:
 
 Example please refer to `StockTool/examples/visualization.ipynb`.
 
-## Forecasting
+### Forecasting
 
 After you accessing the `data`, you can train the `data` as below:
 > `model = stocktool.StockPrediction(data, val)`, where `val="Close"` or `val="Open"`
@@ -109,7 +109,7 @@ You may also want to update the model with new data points, so you can update it
 
 Example please refer to `StockTool/examples/model.ipynb`.
 
-## Evaluation
+### Evaluation
 
 After training data in `model`, we build a method to evaluate our two investment strategies.
 
@@ -124,11 +124,11 @@ Here, we evaluate as below:
 
 Example please refer to `StockTool/examples/evaluation.ipynb`.
 
-# But Report
+## But Report
 
 If you have any issue or bug when running this tool, please submit a `New issue` in `Issues`.
 
 
-# Acknowledgements
+## Acknowledgements
 
 Thanks Prof. David Beck and Erin Wilson from University of Washington for their support, help and feedback in developing this tool.
