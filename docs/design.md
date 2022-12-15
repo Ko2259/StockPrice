@@ -12,4 +12,5 @@ to know roughly how the price change in the near future. They can see the histor
 
 # Use cases
  > User case 1: Mike is a student in UW, he just gets a fellowship with 2000 dollars, and decides to put it into the stock market. However, he is a new investor and knowing nothing about the stock price. He wants to use this tool to get some historical information for the stocks he interested in, and also he wants to know whether these stocks will increase in the future. In addition, since he only have limited amount of money, he is curious about which stock should he buy.
+
  > User case 2: Jack a student in business school, he wants to do a project about how the stock price changed in the past ten years. It would be great if he can have some graph for the stock price, daily fluctuation and candle plot. Especially if he can put several stock price data into a same plot.
