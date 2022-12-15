@@ -1,7 +1,7 @@
 [![Python Package using 
 Conda](https://github.com/Ko2259/StockPrice/actions/workflows/python-package-conda.yml/badge.svg)](https://github.com/Ko2259/StockPrice/actions/workflows/python-package-conda.yml)
 # StockTool
-A Tool for visualize and forecast the stock price, and give user investment strategy.
+A Tool for visualizing, analyzing, forecasting, and evaluating the stock price, and give user investment strategy suggestions.
 
 ## Overview
 
