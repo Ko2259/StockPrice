@@ -124,7 +124,7 @@ class StockEvaluation:
         return:
             : (float) return if we buy 1 dollar.
         """
-        data = DataReader(stock, 'yahoo', date, date)
+        data = DataReader(stock, 'stooq', date, date)
         val_open, val_close = data.iloc[0]["Open"], data.iloc[0]["Close"]
 
         return val_close / val_open
@@ -137,7 +137,7 @@ class StockEvaluation:
             date (timestamp): the date
             stock (str): stock symbol
         """
-        val = DataReader(stock, "yahoo", date, date).iloc[0]["Open"]
+        val = DataReader(stock, "stooq", date, date).iloc[0]["Open"]
 
         return val
 

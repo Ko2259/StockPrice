@@ -168,7 +168,7 @@ class StockPrediction:
 
         ### update model, train, y
         for stock in self.stocks:
-            data = DataReader(stock, 'yahoo', self.date_train+pd.Timedelta(days = 1), date)
+            data = DataReader(stock, 'stooq', self.date_train+pd.Timedelta(days = 1), date)
             train, y = self.get_train_y(data)
             self.train[stock] = pd.concat([self.train[stock], train]).reset_index(drop = True)
             self.y[stock] = pd.concat([self.y[stock], y]).reset_index(drop = True)

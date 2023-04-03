@@ -30,8 +30,8 @@ class TestVisual(unittest.TestCase):
 
     def test_count_open_days(self):
         '''
-    test for the count of open days
-    '''
+        test for the count of open days
+        '''
         start_time = "2022-01-03"
         end_time = "2022-01-24"
         data = StockData(["Meta"], start_time, end_time)

@@ -63,10 +63,9 @@ class StockData:
 
         for name in stocks:
             ### check name is a valid stock symbol
-            try:
-                self.df[name] = DataReader(name, 'yahoo', self.start_ts, self.end_ts,
-                                            session = session)
-            except:
+            self.df[name] = DataReader(name, 'stooq', self.start_ts, self.end_ts,
+                                            session = session)[::-1]
+            if len(self.df[name]) < self.open_days:
                 raise ValueError(f"{name} is not a valid stock code in the time range "
                     +f"({self.start_ts.strftime('%Y-%m-%d')},{self.end_ts.strftime('%Y-%m-%d')})")
 
